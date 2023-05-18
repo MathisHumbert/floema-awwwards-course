@@ -6,13 +6,15 @@
     "backend:development": "nodemon app.js",
     "frontend:build": "webpack --progress --config webpack.config.build.js",
     "frontend:development": "webpack server --progress --config webpack.config.development.js",
-    "dev": "concurrently --kill-others \"yarn backend:development\" \"yarn frontend:development\""
+    "sync": "browser-sync start --proxy http://localhost:3000 --files \"dist/**/*\", \"views/**/*\", app.js --no-open --no-notify --port 4000",
+    "dev": "concurrently --kill-others \"yarn backend:development\" \"yarn frontend:development\" \"yarn sync\""
   },
   "author": "Mathis Humbert",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "babel-loader": "^9.1.2",
+    "browser-sync": "^2.29.1",
     "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^8.0.1",
     "copy-webpack-plugin": "^11.0.0",
@@ -47,6 +49,7 @@
     "@prismicio/client": "^7.0.0",
     "@prismicio/helpers": "^2.3.9",
     "dotenv": "^16.0.3",
+    "errorhandler": "^1.5.1",
     "express": "^4.18.2",
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.22",
