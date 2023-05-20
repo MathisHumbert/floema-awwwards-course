@@ -85,12 +85,10 @@ module.exports = {
       },
 
       {
-        test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/i,
-        loader: 'file-loader',
-        options: {
-          name(file) {
-            return '[hash].[ext]';
-          },
+        test: /\.(png|jpg|gif|jpe?g|svg|woff2?|fnt|webp|mp4)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name].[hash].[ext]',
         },
       },
 
@@ -105,7 +103,7 @@ module.exports = {
 
       {
         test: /\.(glsl|frag|vert)$/,
-        loader: 'raw-loader',
+        loader: 'asset/resource',
         exclude: /node_modules/,
       },
 

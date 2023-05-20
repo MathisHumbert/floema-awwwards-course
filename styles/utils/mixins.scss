@@ -1,8 +1,8 @@
 %cover {
-  height: 100%;
-  left: 0;
   position: absolute;
   top: 0;
+  left: 0;
+  height: 100%;
   width: 100%;
 }
 
@@ -13,9 +13,9 @@
 }
 
 @mixin ratio($height, $width) {
+  position: relative;
   font-size: 0;
   overflow: hidden;
-  position: relative;
 
   &:after {
     content: '';

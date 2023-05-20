@@ -1,5 +1,27 @@
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html {
+  font-size: calc(100vw / 1920) * 10;
+  line-height: 1;
+}
+
 body {
   font-family: $font-suisse-bp;
 
   @extend %description-16;
+}
+
+a {
+  color: inherit;
+  outline: none;
+  text-decoration: none;
+}
+
+img {
+  vertical-align: middle;
 }
