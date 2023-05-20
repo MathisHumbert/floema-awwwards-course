@@ -1,3 +1,29 @@
-* {
-  padding: 0;
-}
+@import './utils/variables';
+@import './utils/functions';
+@import './utils/mixins';
+@import './utils/vendors';
+@import './utils/responsive';
+
+@import './shared/titles';
+@import './shared/descriptions';
+
+@import './base/reset';
+@import './base/base';
+@import './base/fonts';
+
+@import './pages/about/about';
+@import './pages/about/gallery';
+@import './pages/about/content';
+@import './pages/about/highlight';
+
+@import './pages/home/home';
+
+@import './pages/about/about';
+
+@import './pages/detail/detail';
+
+@import './pages/collections/collections';
+
+@import './components/preloader';
+
+@import './layout/navigation';

@@ -6,7 +6,7 @@
     "backend:development": "nodemon app.js",
     "frontend:build": "webpack --progress --config webpack.config.build.js",
     "frontend:development": "webpack server --progress --config webpack.config.development.js",
-    "sync": "browser-sync start --proxy http://localhost:3000 --files \"dist/**/*\", \"views/**/*\", app.js --no-open --no-notify --port 4000",
+    "sync": "browser-sync start --proxy http://localhost:3000 --files \"dist/**/*\" --no-open --no-notify --port 4000",
     "dev": "concurrently --kill-others \"yarn backend:development\" \"yarn frontend:development\" \"yarn sync\""
   },
   "author": "Mathis Humbert",
@@ -34,6 +34,7 @@
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-optipng": "^8.0.0",
     "imagemin-svgo": "^10.0.1",
+    "include-media": "^2.0.0",
     "mini-css-extract-plugin": "^2.7.5",
     "postcss-loader": "^7.3.0",
     "raw-loader": "^4.0.2",
@@ -48,9 +49,12 @@
   "dependencies": {
     "@prismicio/client": "^7.0.0",
     "@prismicio/helpers": "^2.3.9",
+    "body-parser": "^1.20.2",
     "dotenv": "^16.0.3",
     "errorhandler": "^1.5.1",
     "express": "^4.18.2",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0",
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.22",
     "pug": "^3.0.2"
