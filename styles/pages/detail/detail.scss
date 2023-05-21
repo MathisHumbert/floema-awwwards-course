@@ -58,7 +58,6 @@
 }
 
 .detail__information__highlight__icon {
-  border: 1px solid currentColor;
   margin-right: 3.75rem;
   border-radius: 50%;
   width: 4rem;
@@ -100,4 +99,23 @@
 
   display: inline-block;
   margin-top: 3rem;
+}
+
+.detail__button {
+  @extend %description-14;
+
+  position: absolute;
+  left: 50%;
+  bottom: 5rem;
+  transform: translateY(-50%);
+  width: 12.4rem;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.detail__button__icon {
+  @extend %cover;
 }

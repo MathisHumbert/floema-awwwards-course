@@ -22,6 +22,14 @@ a {
   text-decoration: none;
 }
 
+button {
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
 img {
   vertical-align: middle;
 }
