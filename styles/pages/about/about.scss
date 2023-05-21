@@ -12,4 +12,8 @@
   max-width: 124rem;
   margin: auto;
   text-align: center;
+
+  @include media('<phone') {
+    max-width: 67.7rem;
+  }
 }

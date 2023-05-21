@@ -19,6 +19,16 @@
   &:nth-child(8) {
     justify-content: flex-start;
   }
+
+  @include media('<phone') {
+    &:nth-child(5) {
+      justify-content: flex-end;
+    }
+
+    &:nth-child(8) {
+      justify-content: flex-start;
+    }
+  }
 }
 
 .about__content__wrapper {
@@ -27,10 +37,49 @@
   .about__content--right & {
     flex-direction: row-reverse;
   }
+
+  @include media('<phone') {
+    .about__content:nth-child(3) & {
+      flex-direction: column-reverse;
+    }
+
+    .about__content:nth-child(5) & {
+      flex-direction: column;
+    }
+
+    .about__content:nth-child(8) & {
+      flex-direction: column-reverse;
+    }
+
+    .about__content:nth-child(9) & {
+      flex-direction: column-reverse;
+    }
+  }
 }
 
 .about__content__box {
   display: flex;
+
+  @include media('<phone') {
+    width: 60.9rem;
+    margin: auto;
+
+    .about__content:nth-child(3) & {
+      margin-top: 10rem;
+    }
+
+    .about__content:nth-child(5) & {
+      margin-bottom: 10rem;
+    }
+
+    .about__content:nth-child(8) & {
+      margin-top: 10rem;
+    }
+
+    .about__content:nth-child(9) & {
+      margin-top: 10rem;
+    }
+  }
 }
 
 .about__content__label {
@@ -38,6 +87,12 @@
 
   width: 18rem;
   text-transform: uppercase;
+
+  @include media('<phone') {
+    padding-right: 2.5rem;
+    width: 15rem;
+    font-size: 2.4rem;
+  }
 }
 
 .about__content__description {
@@ -45,6 +100,10 @@
 
   p:not(:first-child) {
     margin-top: 2.5rem;
+  }
+
+  @include media('<phone') {
+    width: calc(100% - 15rem);
   }
 }
 
@@ -73,6 +132,32 @@
     width: 60.8rem;
     height: 85.8rem;
     margin-left: 32rem;
+  }
+
+  @include media('<phone') {
+    .about__content:nth-child(3) & {
+      width: 60.9rem;
+      height: 91.4rem;
+      margin-left: 0;
+    }
+
+    .about__content:nth-child(5) & {
+      width: 100vw;
+      height: 50rem;
+      margin-left: 0;
+    }
+
+    .about__content:nth-child(8) & {
+      width: 100vw;
+      height: 52rem;
+      margin-right: 0;
+    }
+
+    .about__content:nth-child(9) & {
+      width: 60.8rem;
+      height: 85.8rem;
+      margin-left: 0;
+    }
   }
 }
 
