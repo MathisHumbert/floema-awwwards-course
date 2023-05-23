@@ -35,7 +35,9 @@
     "imagemin-svgo": "^10.0.1",
     "include-media": "^2.0.0",
     "mini-css-extract-plugin": "^2.7.5",
+    "normalize-wheel": "^1.0.1",
     "postcss-loader": "^7.3.0",
+    "prefix": "^1.0.0",
     "sass": "^1.62.1",
     "sass-loader": "^13.2.2",
     "terser-webpack-plugin": "^5.3.8",
@@ -45,10 +47,8 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@prismicio/client": "^7.0.0",
     "@prismicio/helpers": "^2.3.9",
-    "D": "^1.0.0",
     "body-parser": "^1.20.2",
     "dotenv": "^16.0.3",
     "errorhandler": "^1.5.1",

@@ -6,6 +6,10 @@
 }
 
 html {
+  @extend %cover;
+
+  position: fixed;
+  overflow: hidden;
   font-size: calc(100vw / 1920 * 10);
   line-height: 1;
 
@@ -15,9 +19,12 @@ html {
 }
 
 body {
-  font-family: $font-suisse-bp;
-
   @extend %description-16;
+  @extend %cover;
+
+  position: fixed;
+
+  font-family: $font-suisse-bp;
 }
 
 a {
@@ -36,4 +43,23 @@ button {
 
 img {
   vertical-align: middle;
+}
+
+.content {
+  @extend %cover;
+}
+
+[data-animation='title'],
+[data-animation='paragraph'],
+[data-animation='label'] {
+  span {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    will-change: transform;
+  }
+
+  span span {
+    will-change: transform;
+  }
 }

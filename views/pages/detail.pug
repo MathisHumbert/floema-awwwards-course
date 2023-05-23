@@ -7,7 +7,7 @@ block content
   .detail 
     .detail__wrapper 
       figure.detail__media
-        img.detail__media__img(src=product.data.image.url , alt=product.data.image.alt)
+        img.detail__media__img(data-src=product.data.image.url , alt=product.data.image.alt)
       .detail__information
         p.detail__information__collection=`${product.data.collection.data.title} collection`
         h1.detail__information__title=product.data.title[0].text
