@@ -41,8 +41,6 @@ export default class Title extends Animation {
   }
 
   onResize() {
-    console.log('resize');
-
     this.elementLines = calculate(this.elementLinesSpans);
   }
 }

@@ -7,6 +7,7 @@ const errorHandler = require('errorhandler');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const uaParser = require('ua-parser-js');
 const Prismic = require('@prismicio/client');
 const PrismicH = require('@prismicio/helpers');
 
@@ -46,6 +47,12 @@ const HandleLinkResolver = (doc) => {
 
 // Middleware to inject prismic context
 app.use((req, res, next) => {
+  const ua = uaParser(req.headers['user-agent']);
+
+  res.locals.isDesktop = ua.device.type === undefined;
+  res.locals.isTablet = ua.device.type === 'tablet';
+  res.locals.isPhone = ua.device.type === 'mobile';
+
   res.locals.PrismicH = PrismicH;
   res.locals.Link = HandleLinkResolver;
 

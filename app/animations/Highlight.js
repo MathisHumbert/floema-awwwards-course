@@ -1,5 +1,4 @@
 import { gsap } from 'gsap';
-import each from 'lodash/each';
 
 import Animation from 'classes/Animation';
 

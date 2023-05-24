@@ -6,17 +6,29 @@ import Detail from 'pages/Detail';
 import Home from 'pages/Home';
 
 import Preloader from 'components/Preloader';
+import Navigation from 'components/Navigation';
+
+// TODO last video to watch when webgl is done
+
+// to be used if we want to animate stuff different for mobile / tablet / desktop
+// import DetectionManager from 'classes/Detections';
 
 class App {
   constructor() {
-    this.createPreloader();
     this.createContent();
+
+    this.createPreloader();
+    this.createNavigation();
     this.createPages();
 
     this.addEventListeners();
     this.addLinkListeners();
 
     this.update();
+  }
+
+  createNavigation() {
+    this.navigation = new Navigation({ template: this.template });
   }
 
   createPreloader() {
@@ -42,16 +54,25 @@ class App {
     this.page.create();
   }
 
+  // Events
   onPreloaded() {
     this.preloader.destroy();
     this.onResize();
     this.page.show();
   }
 
+  onPopState() {
+    this.onChange({
+      url: window.location.pathname,
+      push: false,
+    });
+  }
+
   // On page change catch next page html
-  async onChange(url) {
+  async onChange({ url, push = true }) {
     await this.page.hide();
 
+    console.log(url);
     const request = await window.fetch(url);
 
     if (request.status === 200) {
@@ -59,8 +80,14 @@ class App {
       const div = document.createElement('div');
       div.innerHTML = html;
 
+      if (push) {
+        window.history.pushState({}, '', url);
+      }
+
       const divContent = div.querySelector('.content');
       this.template = divContent.getAttribute('data-template');
+
+      this.navigation.onChange(this.template);
 
       this.content.innerHTML = divContent.innerHTML;
       this.content.setAttribute('data-template', this.template);
@@ -92,6 +119,7 @@ class App {
   }
 
   addEventListeners() {
+    window.addEventListener('popstate', this.onPopState.bind(this));
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -103,7 +131,7 @@ class App {
       link.onclick = (e) => {
         e.preventDefault();
 
-        this.onChange(link.href);
+        this.onChange({ url: link.href, push: true });
       };
     });
   }
