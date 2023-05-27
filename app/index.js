@@ -7,6 +7,7 @@ import Home from 'pages/Home';
 
 import Preloader from 'components/Preloader';
 import Navigation from 'components/Navigation';
+import Canvas from 'components/Canvas';
 
 // TODO last video to watch when webgl is done
 
@@ -19,6 +20,7 @@ class App {
 
     this.createPreloader();
     this.createNavigation();
+    this.createCanvas();
     this.createPages();
 
     this.addEventListeners();
@@ -34,6 +36,10 @@ class App {
   createPreloader() {
     this.preloader = new Preloader();
     this.preloader.once('completed', this.onPreloaded.bind(this));
+  }
+
+  createCanvas() {
+    this.canvas = new Canvas();
   }
 
   createContent() {
@@ -108,6 +114,28 @@ class App {
     if (this.page && this.page.onResize) {
       this.page.onResize();
     }
+
+    if (this.canvas && this.canvas.onResize) {
+      this.canvas.onResize();
+    }
+  }
+
+  onTouchDown(event) {
+    if (this.canvas && this.canvas.onTouchDown) {
+      this.canvas.onTouchDown(event);
+    }
+  }
+
+  onTouchMove(event) {
+    if (this.canvas && this.canvas.onTouchMove) {
+      this.canvas.onTouchMove(event);
+    }
+  }
+
+  onTouchUp(event) {
+    if (this.canvas && this.canvas.onTouchUp) {
+      this.canvas.onTouchUp(event);
+    }
   }
 
   update() {
@@ -116,10 +144,23 @@ class App {
     if (this.page && this.page.update) {
       this.page.update();
     }
+
+    if (this.canvas && this.canvas.update) {
+      this.canvas.update();
+    }
   }
 
   addEventListeners() {
+    window.addEventListener('mousedown', this.onTouchDown.bind(this));
+    window.addEventListener('mousemove', this.onTouchMove.bind(this));
+    window.addEventListener('mouseup', this.onTouchUp.bind(this));
+
+    window.addEventListener('touchstart', this.onTouchDown.bind(this));
+    window.addEventListener('touchmove', this.onTouchMove.bind(this));
+    window.addEventListener('touchend', this.onTouchUp.bind(this));
+
     window.addEventListener('popstate', this.onPopState.bind(this));
+
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
