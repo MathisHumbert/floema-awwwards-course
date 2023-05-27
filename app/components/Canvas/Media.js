@@ -2,6 +2,7 @@ import { Program, Mesh, Texture } from 'ogl';
 
 import vertex from 'shaders/plane-vertex.glsl';
 import fragment from 'shaders/plane-fragment.glsl';
+import { gsap } from 'gsap';
 
 export default class Media {
   constructor({ element, index, gl, geometry, scene, sizes }) {
@@ -11,6 +12,11 @@ export default class Media {
     this.geometry = geometry;
     this.scene = scene;
     this.sizes = sizes;
+
+    this.extra = {
+      x: 0,
+      y: 0,
+    };
 
     this.createTexture();
     this.createProgram();
@@ -42,7 +48,8 @@ export default class Media {
       program: this.program,
     });
     this.mesh.setParent(this.scene);
-    this.mesh.position.x += this.index * this.mesh.scale.x;
+
+    this.mesh.rotation.z = gsap.utils.random(-Math.PI * 0.02, Math.PI * 0.02);
   }
 
   createBounds() {
@@ -67,14 +74,16 @@ export default class Media {
     this.mesh.position.x =
       -this.sizes.width / 2 +
       this.mesh.scale.x / 2 +
-      ((this.bounds.left - x) / window.innerWidth) * this.sizes.width;
+      ((this.bounds.left - x) / window.innerWidth) * this.sizes.width +
+      this.extra.x;
   }
 
   updateY(y = 0) {
     this.mesh.position.y =
       this.sizes.height / 2 -
       this.mesh.scale.y / 2 -
-      ((this.bounds.top - y) / window.innerHeight) * this.sizes.height;
+      ((this.bounds.top - y) / window.innerHeight) * this.sizes.height +
+      this.extra.y;
   }
 
   /**
@@ -84,15 +93,61 @@ export default class Media {
     this.sizes = sizes;
 
     this.createBounds();
+    this.extra = {
+      x: 0,
+      y: 0,
+    };
   }
 
   /**
    * Loop.
    */
-  update(scroll) {
+  update({ scroll, gallerySizes, direction }) {
     if (!this.bounds) return;
 
     this.updateX(scroll.x);
     this.updateY(scroll.y);
+
+    const scaleX = this.mesh.scale.x / 2;
+    const sizesX = this.sizes.width / 2;
+
+    if (direction.x === 'left') {
+      if (this.mesh.position.x + scaleX < -sizesX) {
+        this.extra.x += gallerySizes.width;
+        this.mesh.rotation.z = gsap.utils.random(
+          -Math.PI * 0.02,
+          Math.PI * 0.02
+        );
+      }
+    } else if (direction.x === 'right') {
+      if (this.mesh.position.x - scaleX > sizesX) {
+        this.extra.x -= gallerySizes.width;
+        this.mesh.rotation.z = gsap.utils.random(
+          -Math.PI * 0.02,
+          Math.PI * 0.02
+        );
+      }
+    }
+
+    const scaleY = this.mesh.scale.y / 2;
+    const sizesY = this.sizes.height / 2;
+
+    if (direction.y === 'top') {
+      if (this.mesh.position.y + scaleY < -sizesY) {
+        this.extra.y += gallerySizes.height;
+        this.mesh.rotation.z = gsap.utils.random(
+          -Math.PI * 0.02,
+          Math.PI * 0.02
+        );
+      }
+    } else if (direction.y === 'bottom') {
+      if (this.mesh.position.y - scaleY > sizesY) {
+        this.extra.y -= gallerySizes.height;
+        this.mesh.rotation.z = gsap.utils.random(
+          -Math.PI * 0.02,
+          Math.PI * 0.02
+        );
+      }
+    }
   }
 }

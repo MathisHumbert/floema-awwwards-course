@@ -1,4 +1,5 @@
 import { each } from 'lodash';
+import normalizeWheel from 'normalize-wheel';
 
 import About from 'pages/About';
 import Collections from 'pages/Collections';
@@ -138,6 +139,18 @@ class App {
     }
   }
 
+  onWheel(event) {
+    const { pixelY } = normalizeWheel(event);
+
+    if (this.page && this.page.onWheel) {
+      this.page.onWheel({ pixelY });
+    }
+
+    if (this.canvas && this.canvas.onWheel) {
+      this.canvas.onWheel({ pixelY });
+    }
+  }
+
   update() {
     window.requestAnimationFrame(this.update.bind(this));
 
@@ -158,6 +171,8 @@ class App {
     window.addEventListener('touchstart', this.onTouchDown.bind(this));
     window.addEventListener('touchmove', this.onTouchMove.bind(this));
     window.addEventListener('touchend', this.onTouchUp.bind(this));
+
+    window.addEventListener('wheel', this.onWheel.bind(this));
 
     window.addEventListener('popstate', this.onPopState.bind(this));
 
