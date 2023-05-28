@@ -40,7 +40,7 @@ class App {
   }
 
   createCanvas() {
-    this.canvas = new Canvas();
+    this.canvas = new Canvas({ template: this.template });
   }
 
   createContent() {
@@ -77,6 +77,7 @@ class App {
 
   // On page change catch next page html
   async onChange({ url, push = true }) {
+    this.canvas.onChangeStart();
     await this.page.hide();
 
     console.log(url);
@@ -98,6 +99,8 @@ class App {
 
       this.content.innerHTML = divContent.innerHTML;
       this.content.setAttribute('data-template', this.template);
+
+      this.canvas.onChangeEnd(this.template);
 
       this.page = this.pages[this.template];
       this.page.create();

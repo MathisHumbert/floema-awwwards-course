@@ -2,20 +2,19 @@ import { Plane, Transform } from 'ogl';
 import { gsap } from 'gsap';
 import { each, map } from 'lodash';
 
-import Media from 'components/Canvas/Media';
+import Media from './Media';
 
 export default class Home {
   constructor({ gl, scene, sizes }) {
     this.gl = gl;
+    this.scene = scene;
     this.sizes = sizes;
 
     this.galleryElement = document.querySelector('.home__gallery');
-    this.mediasElements = document.querySelectorAll(
-      '.home__gallery__media__image'
-    );
+    this.mediasElements = document.querySelectorAll('.home__gallery__media');
 
     this.group = new Transform();
-    this.group.setParent(scene);
+    this.group.setParent(this.scene);
 
     this.x = { current: 0, target: 0, lerp: 0.1, direction: '' };
     this.y = { current: 0, target: 0, lerp: 0.1, direction: '' };
@@ -24,6 +23,7 @@ export default class Home {
 
     this.createGeometry();
     this.createGallery();
+    this.show();
   }
 
   createGeometry() {
@@ -46,6 +46,16 @@ export default class Home {
     });
   }
 
+  /**
+   * Animations.
+   */
+  show() {
+    each(this.medias, (element) => element.show());
+  }
+
+  hide() {
+    each(this.medias, (element) => element.hide());
+  }
   /**
    * Events.
    */
@@ -115,5 +125,12 @@ export default class Home {
         direction: { x: this.x.direction, y: this.y.direction },
       });
     });
+  }
+
+  /**
+   * Destroy.
+   */
+  destroy() {
+    this.scene.removeChild(this.group);
   }
 }

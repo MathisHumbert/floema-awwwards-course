@@ -26,9 +26,11 @@ export default class Media {
   createTexture() {
     this.texture = new Texture(this.gl);
 
+    const imageElement = this.element.querySelector('img');
+
     this.image = new Image();
     this.image.crossOrigin = 'anonymous';
-    this.image.src = this.element.getAttribute('data-src');
+    this.image.src = imageElement.getAttribute('data-src');
     this.image.onload = () => (this.texture.image = this.image);
   }
 
@@ -37,6 +39,7 @@ export default class Media {
       fragment,
       vertex,
       uniforms: {
+        uAlpha: { value: 0 },
         tMap: { value: this.texture },
       },
     });
@@ -58,6 +61,17 @@ export default class Media {
     this.updateScale();
     this.updateX();
     this.updateY();
+  }
+
+  /**
+   * Animations.
+   */
+  show() {
+    gsap.fromTo(this.program.uniforms.uAlpha, { value: 0 }, { value: 1 });
+  }
+
+  hide() {
+    gsap.to(this.program.uniforms.uAlpha, { value: 0 });
   }
 
   /**
@@ -91,12 +105,12 @@ export default class Media {
    */
   onResize({ sizes }) {
     this.sizes = sizes;
-
-    this.createBounds();
     this.extra = {
       x: 0,
       y: 0,
     };
+
+    this.createBounds();
   }
 
   /**
