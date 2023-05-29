@@ -22,6 +22,7 @@ export default class Gallery {
       last: 0,
       position: 0,
       lerp: 0.1,
+      velocity: 1,
     };
 
     this.group = new Transform();
@@ -86,8 +87,15 @@ export default class Gallery {
   /**
    * Loop.
    */
-  update() {
+  update(scroll) {
     if (!this.width) return;
+
+    const y = (scroll.current / window.innerHeight) * this.sizes.height;
+    const distance = (scroll.current - scroll.target) * 0.1;
+
+    this.group.position.y = y;
+
+    this.scroll.target -= this.scroll.velocity + distance;
 
     this.scroll.current = gsap.utils.interpolate(
       this.scroll.current,
@@ -97,8 +105,10 @@ export default class Gallery {
 
     if (this.scroll.current > this.scroll.last) {
       this.direction = 'left';
+      this.scroll.velocity = -1;
     } else if (this.scroll.current < this.scroll.last) {
       this.direction = 'right';
+      this.scroll.velocity = 1;
     }
 
     this.scroll.last = this.scroll.current;

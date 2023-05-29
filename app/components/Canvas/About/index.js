@@ -75,9 +75,9 @@ export default class About {
   /**
    * Loop.
    */
-  update() {
+  update(scroll) {
     each(this.galleries, (element) => {
-      element.update();
+      element.update(scroll);
     });
   }
 

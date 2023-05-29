@@ -162,7 +162,7 @@ class App {
     }
 
     if (this.canvas && this.canvas.update) {
-      this.canvas.update();
+      this.canvas.update(this.page.scroll);
     }
   }
 

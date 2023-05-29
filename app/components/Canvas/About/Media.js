@@ -92,6 +92,19 @@ export default class Media {
       this.sizes.height / 2 -
       this.mesh.scale.y / 2 -
       (this.bounds.top / window.innerHeight) * this.sizes.height;
+    this.mesh.position.y +=
+      Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 40 -
+      40;
+  }
+
+  updateRotation() {
+    this.mesh.rotation.z = gsap.utils.mapRange(
+      -this.sizes.width / 2,
+      this.sizes.width / 2,
+      Math.PI * 0.1,
+      -Math.PI * 0.1,
+      this.mesh.position.x
+    );
   }
 
   /**
@@ -110,12 +123,11 @@ export default class Media {
   update({ scroll, galleryWidth, direction }) {
     if (!this.bounds) return;
 
-    // this.mesh.position.y =
-    //   Math.cos((this.mesh.position.x / galleryWidth) * Math.PI) * 75 - 75;
-
     this.updateX(scroll);
+    this.updateY(0);
+    this.updateRotation();
 
-    const scaleX = this.mesh.scale.x / 2;
+    const scaleX = this.mesh.scale.x / 2 + 0.25;
     const sizesX = this.sizes.width / 2;
 
     if (direction === 'left') {
