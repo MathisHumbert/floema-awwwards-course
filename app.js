@@ -98,8 +98,9 @@ app.get('/detail/:id', async (req, res) => {
   const product = await api.getByUID('product', 'silver-necklace', {
     fetchLinks: 'collection.title',
   });
+  const home = await api.getSingle('home');
 
-  res.render('pages/detail', { ...defaults, product });
+  res.render('pages/detail', { ...defaults, product, home });
 });
 
 app.get('/collections', async (req, res) => {

@@ -48,7 +48,6 @@ class App {
     this.template = this.content.getAttribute('data-template');
   }
 
-  // create all pages and init acutal page
   createPages() {
     this.pages = {
       about: new About(),
@@ -61,7 +60,9 @@ class App {
     this.page.create();
   }
 
-  // Events
+  /**
+   * Events.
+   */
   onPreloaded() {
     this.preloader.destroy();
     this.onResize();
@@ -75,7 +76,6 @@ class App {
     });
   }
 
-  // On page change catch next page html
   async onChange({ url, push = true }) {
     this.canvas.onChangeStart();
     await this.page.hide();
@@ -154,6 +154,9 @@ class App {
     }
   }
 
+  /**
+   * Loop.
+   */
   update() {
     window.requestAnimationFrame(this.update.bind(this));
 
@@ -166,6 +169,9 @@ class App {
     }
   }
 
+  /**
+   * Listeners.
+   */
   addEventListeners() {
     window.addEventListener('mousedown', this.onTouchDown.bind(this));
     window.addEventListener('mousemove', this.onTouchMove.bind(this));

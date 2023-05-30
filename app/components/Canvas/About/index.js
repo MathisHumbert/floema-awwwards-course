@@ -68,10 +68,6 @@ export default class About {
     );
   }
 
-  onWheel({ pixelY }) {
-    each(this.galleries, (element) => element.onWheel({ pixelY }));
-  }
-
   /**
    * Loop.
    */

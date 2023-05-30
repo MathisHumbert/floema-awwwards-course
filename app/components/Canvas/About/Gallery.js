@@ -80,10 +80,6 @@ export default class Gallery {
     this.scroll.target = this.scroll.position + distance;
   }
 
-  onWheel({ pixelY }) {
-    // this.y.target += pixelY;
-  }
-
   /**
    * Loop.
    */
