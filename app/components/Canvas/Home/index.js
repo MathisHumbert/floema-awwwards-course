@@ -20,6 +20,7 @@ export default class Home {
     this.y = { current: 0, target: 0, lerp: 0.1, direction: '' };
     this.scroll = { x: 0, y: 0 };
     this.scrollCurrent = { x: 0, y: 0 };
+    this.speed = { current: 0, target: 0, lerp: 0.1 };
 
     this.createGeometry();
     this.createGallery();
@@ -28,8 +29,8 @@ export default class Home {
 
   createGeometry() {
     this.geometry = new Plane(this.gl, {
-      widthSegments: 10,
-      heightSegments: 10,
+      widthSegments: 20,
+      heightSegments: 20,
     });
   }
 
@@ -73,6 +74,8 @@ export default class Home {
   }
 
   onTouchDown() {
+    this.speed.target = 1;
+
     this.scrollCurrent.x = this.scroll.x;
     this.scrollCurrent.y = this.scroll.y;
   }
@@ -80,6 +83,10 @@ export default class Home {
   onTouchMove({ x, y }) {
     this.x.target = this.scrollCurrent.x + x.distance;
     this.y.target = this.scrollCurrent.y + y.distance;
+  }
+
+  onTouchUp() {
+    this.speed.target = 0;
   }
 
   onWheel({ pixelY }) {
@@ -91,6 +98,17 @@ export default class Home {
    */
   update() {
     if (!this.gallerySizes) return;
+
+    // const a = this.x.target - this.x.current;
+    // const b = this.y.target - this.y.current;
+
+    // const speed = Math.sqrt(a * a + b * b) * 0.01;
+
+    this.speed.current = gsap.utils.interpolate(
+      this.speed.current,
+      this.speed.target,
+      this.speed.lerp
+    );
 
     this.x.current = gsap.utils.interpolate(
       this.x.current,
@@ -123,6 +141,7 @@ export default class Home {
         scroll: this.scroll,
         gallerySizes: this.gallerySizes,
         direction: { x: this.x.direction, y: this.y.direction },
+        speed: this.speed.current,
       });
     });
   }

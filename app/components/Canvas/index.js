@@ -6,6 +6,8 @@ import Collections from 'components/Canvas/Collections';
 
 export default class Canvas {
   constructor({ template }) {
+    this.template = template;
+
     this.x = {
       start: 0,
       distance: 0,
@@ -18,8 +20,6 @@ export default class Canvas {
     this.createScene();
 
     this.onResize();
-
-    this.onChangeEnd(template);
   }
 
   createRenderer() {
@@ -73,7 +73,7 @@ export default class Canvas {
   }
 
   /**
-   * collections.
+   * Collections.
    */
   createCollections() {
     this.collections = new Collections({
@@ -93,6 +93,10 @@ export default class Canvas {
   /**
    * Events.
    */
+  onPreloaded() {
+    this.onChangeEnd(this.template);
+  }
+
   onChangeStart() {
     if (this.home) {
       this.home.hide();
@@ -121,14 +125,12 @@ export default class Canvas {
     }
 
     if (template === 'collections') {
-      this.gl.canvas.style.zIndex = 1000;
-
       this.createCollections();
     } else if (this.collections) {
-      this.gl.canvas.style.zIndex = '';
-
       this.destroyCollections();
     }
+
+    this.onResize();
   }
 
   onResize() {
@@ -203,6 +205,10 @@ export default class Canvas {
 
   onTouchUp() {
     this.isDown = false;
+
+    if (this.home && this.home.onTouchUp) {
+      this.home.onTouchUp();
+    }
   }
 
   onWheel(event) {

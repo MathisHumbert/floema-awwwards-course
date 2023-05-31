@@ -66,29 +66,47 @@ const handleRequest = async (api) => {
   const meta = await api.getSingle('meta');
   const preloader = await api.getSingle('preloader');
   const navigation = await api.getSingle('navigation');
+  const home = await api.getSingle('home');
+  const collections = await api.getAllByType('collection', {
+    fetchLinks: 'product.image',
+  });
+  const about = await api.getSingle('about');
 
-  return { meta, preloader, navigation };
+  let assets = [];
+
+  home.data.gallery.forEach((item) => assets.push(item.image.url));
+
+  about.data.gallery.forEach((item) => assets.push(item.image.url));
+
+  about.data.body.forEach((section) => {
+    if (section.slice_type === 'gallery') {
+      section.items.forEach((item) => assets.push(item.image.url));
+    }
+  });
+
+  collections.forEach((collection) => {
+    collection.data.products.forEach((item) =>
+      assets.push(item.products_product.data.image.url)
+    );
+  });
+
+  return { assets, meta, preloader, navigation, home, collections, about };
 };
 
 app.get('/', async (req, res) => {
   const api = initApi(req);
 
   const defaults = await handleRequest(api);
-  const home = await api.getSingle('home');
-  const collections = await api.getAllByType('collection', {
-    fetchLinks: 'product.image',
-  });
 
-  res.render('pages/home', { ...defaults, collections, home });
+  res.render('pages/home', { ...defaults });
 });
 
 app.get('/about', async (req, res) => {
   const api = initApi(req);
 
   const defaults = await handleRequest(api);
-  const about = await api.getSingle('about');
 
-  res.render('pages/about', { ...defaults, about });
+  res.render('pages/about', { ...defaults });
 });
 
 app.get('/detail/:id', async (req, res) => {
@@ -98,9 +116,8 @@ app.get('/detail/:id', async (req, res) => {
   const product = await api.getByUID('product', 'silver-necklace', {
     fetchLinks: 'collection.title',
   });
-  const home = await api.getSingle('home');
 
-  res.render('pages/detail', { ...defaults, product, home });
+  res.render('pages/detail', { ...defaults, product });
 });
 
 app.get('/collections', async (req, res) => {
@@ -108,12 +125,7 @@ app.get('/collections', async (req, res) => {
 
   const defaults = await handleRequest(api);
 
-  const home = await api.getSingle('home');
-  const collections = await api.getAllByType('collection', {
-    fetchLinks: 'product.image',
-  });
-
-  res.render('pages/collections', { ...defaults, collections, home });
+  res.render('pages/collections', { ...defaults });
 });
 
 app.listen(port, () => {

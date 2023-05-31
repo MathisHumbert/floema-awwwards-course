@@ -1,3 +1,4 @@
+import { Texture } from 'ogl';
 import each from 'lodash/each';
 import { gsap } from 'gsap';
 
@@ -5,16 +6,18 @@ import Component from 'classes/Component';
 import { split } from 'utils/text';
 
 export default class Preloader extends Component {
-  constructor() {
+  constructor({ canvas }) {
     super({
       element: '.preloader',
       elements: {
         title: '.preloader__text',
         numberText: '.preloader__number__text',
-
-        images: document.querySelectorAll('img'),
       },
     });
+
+    this.canvas = canvas;
+
+    window.TEXTURES = {};
 
     split({
       element: this.elements.title,
@@ -35,9 +38,19 @@ export default class Preloader extends Component {
   }
 
   createLoader() {
-    each(this.elements.images, (element) => {
-      element.src = element.getAttribute('data-src');
-      element.onload = () => this.onAssetLoaded(element);
+    each(window.ASSETS, (asset) => {
+      const texture = new Texture(this.canvas.gl, { generateMipmaps: false });
+
+      const image = new Image();
+      image.crossOrigin = 'anonymous';
+      image.src = asset;
+
+      image.onload = () => {
+        texture.image = image;
+        this.onAssetLoaded();
+      };
+
+      window.TEXTURES[asset] = texture;
     });
   }
 
@@ -45,7 +58,7 @@ export default class Preloader extends Component {
   onAssetLoaded(image) {
     this.length += 1;
 
-    const percent = this.length / this.elements.images.length;
+    const percent = this.length / window.ASSETS.length;
 
     this.elements.numberText.innerHTML = `${Math.round(percent * 100)}%`;
 
@@ -59,12 +72,18 @@ export default class Preloader extends Component {
     this.animateOut = gsap.timeline({
       delay: 1,
       defaults: { duration: 1.5, ease: 'expo.out' },
+      onStart: () => {
+        this.emit('completed');
+      },
+      onComplete: () => {
+        this.destroy();
+      },
     });
 
     this.animateOut
+
       .to(this.elements.titleSpans, {
         y: '100%',
-
         stagger: 0.1,
       })
       .to(
@@ -77,14 +96,11 @@ export default class Preloader extends Component {
       .to(
         this.element,
         {
-          scaleY: 0,
-          transformOrigin: '0 100%',
+          autoAlpha: 0,
+          duration: 1,
         },
         '-=1'
-      )
-      .call(() => {
-        this.emit('completed');
-      });
+      );
   }
 
   destroy() {

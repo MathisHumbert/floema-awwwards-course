@@ -1,7 +1,7 @@
-import { Program, Mesh, Texture } from 'ogl';
+import { Program, Mesh } from 'ogl';
 
-import vertex from 'shaders/plane-vertex.glsl';
-import fragment from 'shaders/plane-fragment.glsl';
+import vertex from 'shaders/home-vertex.glsl';
+import fragment from 'shaders/home-fragment.glsl';
 import { gsap } from 'gsap';
 
 export default class Media {
@@ -24,14 +24,8 @@ export default class Media {
   }
 
   createTexture() {
-    this.texture = new Texture(this.gl);
-
     const imageElement = this.element.querySelector('img');
-
-    this.image = new Image();
-    this.image.crossOrigin = 'anonymous';
-    this.image.src = imageElement.getAttribute('data-src');
-    this.image.onload = () => (this.texture.image = this.image);
+    this.texture = window.TEXTURES[imageElement.getAttribute('data-src')];
   }
 
   createProgram() {
@@ -41,6 +35,8 @@ export default class Media {
       uniforms: {
         uAlpha: { value: 0 },
         tMap: { value: this.texture },
+        uViewPortSizes: { value: [this.sizes.width, this.sizes.height] },
+        uSpeed: { value: 0 },
       },
     });
   }
@@ -67,7 +63,7 @@ export default class Media {
    * Animations.
    */
   show() {
-    gsap.fromTo(this.program.uniforms.uAlpha, { value: 0 }, { value: 1 });
+    gsap.fromTo(this.program.uniforms.uAlpha, { value: 0 }, { value: 0.4 });
   }
 
   hide() {
@@ -110,20 +106,27 @@ export default class Media {
       y: 0,
     };
 
+    this.program.uniforms.uViewPortSizes.value = [
+      this.sizes.width,
+      this.sizes.height,
+    ];
+
     this.createBounds();
   }
 
   /**
    * Loop.
    */
-  update({ scroll, gallerySizes, direction }) {
+  update({ scroll, gallerySizes, direction, speed }) {
     if (!this.bounds) return;
+
+    this.program.uniforms.uSpeed.value = speed;
 
     this.updateX(scroll.x);
     this.updateY(scroll.y);
 
     const scaleX = this.mesh.scale.x / 2;
-    const sizesX = this.sizes.width / 2;
+    const sizesX = this.sizes.width * 0.6;
 
     if (direction.x === 'left') {
       if (this.mesh.position.x + scaleX < -sizesX) {
@@ -144,7 +147,7 @@ export default class Media {
     }
 
     const scaleY = this.mesh.scale.y / 2;
-    const sizesY = this.sizes.height / 2;
+    const sizesY = this.sizes.height * 0.6;
 
     if (direction.y === 'top') {
       if (this.mesh.position.y + scaleY < -sizesY) {
