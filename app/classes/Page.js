@@ -109,28 +109,31 @@ export default class Page {
   }
 
   // Animations
-  show() {
+  show(animation) {
     return new Promise((resolve) => {
       ColorsManager.change({
         backgroundColor: this.element.getAttribute('data-background'),
         color: this.element.getAttribute('data-color'),
       });
 
-      this.animationIn = gsap.timeline();
+      if (animation) {
+        this.animationIn = animation;
+      } else {
+        this.animationIn = gsap.timeline();
 
-      this.animationIn
-        .fromTo(
+        this.animationIn.fromTo(
           this.element,
           { autoAlpha: 0, duration: 0 },
           {
             autoAlpha: 1,
-            onComplete: resolve,
           }
-        )
-        .call(() => {
-          this.addEventListeners();
-          resolve();
-        });
+        );
+      }
+
+      this.animationIn.call(() => {
+        this.addEventListeners();
+        resolve();
+      });
     });
   }
 

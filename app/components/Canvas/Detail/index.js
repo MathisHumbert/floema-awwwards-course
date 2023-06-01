@@ -1,24 +1,27 @@
-import { Program, Mesh } from 'ogl';
+import { Program, Mesh, Plane } from 'ogl';
 import { gsap } from 'gsap';
 
-import Detection from 'classes/Detection';
 import vertex from 'shaders/plane-vertex.glsl';
 import fragment from 'shaders/plane-fragment.glsl';
 
-export default class Media {
-  constructor({ element, index, gl, geometry, scene, sizes }) {
-    this.element = element;
-    this.index = index;
+export default class Detail {
+  constructor({ gl, scene, sizes, transition }) {
+    this.id = 'detail';
     this.gl = gl;
-    this.geometry = geometry;
     this.scene = scene;
     this.sizes = sizes;
+    this.transition = transition;
 
-    this.extra = 0;
+    this.element = document.querySelector('.detail__media');
+
+    this.geometry = new Plane(this.gl);
 
     this.createTexture();
     this.createProgram();
     this.createMesh();
+    this.createBounds();
+
+    this.show();
   }
 
   createTexture() {
@@ -42,6 +45,9 @@ export default class Media {
       geometry: this.geometry,
       program: this.program,
     });
+
+    this.mesh.rotation.z = Math.PI * 0.01;
+
     this.mesh.setParent(this.scene);
   }
 
@@ -57,7 +63,14 @@ export default class Media {
    * Animations.
    */
   show() {
-    gsap.fromTo(this.program.uniforms.uAlpha, { value: 0 }, { value: 1 });
+    if (this.transition) {
+      this.transition.animate(
+        this.mesh,
+        () => (this.program.uniforms.uAlpha.value = 1)
+      );
+    } else {
+      gsap.fromTo(this.program.uniforms.uAlpha, { value: 0 }, { value: 1 });
+    }
   }
 
   hide() {
@@ -74,36 +87,18 @@ export default class Media {
       this.sizes.height * (this.bounds.height / window.innerHeight);
   }
 
-  updateX(x = 0) {
+  updateX() {
     this.mesh.position.x =
       -this.sizes.width / 2 +
       this.mesh.scale.x / 2 +
-      ((this.bounds.left - x) / window.innerWidth) * this.sizes.width +
-      this.extra;
+      (this.bounds.left / window.innerWidth) * this.sizes.width;
   }
 
-  updateY() {
+  updateY(y = 0) {
     this.mesh.position.y =
       this.sizes.height / 2 -
       this.mesh.scale.y / 2 -
-      (this.bounds.top / window.innerHeight) * this.sizes.height;
-
-    const extra = Detection.isPhone() ? 20 : 40;
-
-    this.mesh.position.y +=
-      Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) *
-        extra -
-      extra;
-  }
-
-  updateRotation() {
-    this.mesh.rotation.z = gsap.utils.mapRange(
-      -this.sizes.width / 2,
-      this.sizes.width / 2,
-      Math.PI * 0.1,
-      -Math.PI * 0.1,
-      this.mesh.position.x
-    );
+      ((this.bounds.top - y) / window.innerHeight) * this.sizes.height;
   }
 
   /**
@@ -113,30 +108,19 @@ export default class Media {
     this.sizes = sizes;
 
     this.createBounds();
-    this.extra = 0;
   }
 
   /**
    * Loop.
    */
-  update({ scroll, galleryWidth, direction }) {
-    if (!this.bounds) return;
+  update(scroll) {
+    // this.updateY(scroll.current);
+  }
 
-    this.updateX(scroll);
-    this.updateY(0);
-    this.updateRotation();
-
-    const scaleX = this.mesh.scale.x / 2 + 0.25;
-    const sizesX = this.sizes.width / 2;
-
-    if (direction === 'left') {
-      if (this.mesh.position.x + scaleX < -sizesX) {
-        this.extra += galleryWidth;
-      }
-    } else if (direction === 'right') {
-      if (this.mesh.position.x - scaleX > sizesX) {
-        this.extra -= galleryWidth;
-      }
-    }
+  /**
+   * Destroy.
+   */
+  destroy() {
+    this.scene.removeChild(this.mesh);
   }
 }

@@ -3,7 +3,8 @@ import { Renderer, Camera, Transform } from 'ogl';
 import Home from 'components/Canvas/Home';
 import About from 'components/Canvas/About';
 import Collections from 'components/Canvas/Collections';
-
+import Detail from 'components/Canvas/Detail';
+import Transition from './Tranistion';
 export default class Canvas {
   constructor({ template }) {
     this.template = template;
@@ -80,6 +81,7 @@ export default class Canvas {
       gl: this.gl,
       scene: this.scene,
       sizes: this.sizes,
+      transition: this.transition,
     });
   }
 
@@ -91,13 +93,32 @@ export default class Canvas {
   }
 
   /**
+   * Detail.
+   */
+  createDetail() {
+    this.detail = new Detail({
+      gl: this.gl,
+      scene: this.scene,
+      sizes: this.sizes,
+      transition: this.transition,
+    });
+  }
+
+  destroyDetail() {
+    if (!this.detail) return;
+
+    this.detail.destroy();
+    this.detail = null;
+  }
+
+  /**
    * Events.
    */
   onPreloaded() {
     this.onChangeEnd(this.template);
   }
 
-  onChangeStart() {
+  onChangeStart(template, url) {
     if (this.home) {
       this.home.hide();
     }
@@ -108,6 +129,26 @@ export default class Canvas {
 
     if (this.collections) {
       this.collections.hide();
+    }
+
+    if (this.detail) {
+      this.detail.hide();
+    }
+
+    this.isFromCollectionsToDetail =
+      template === 'collections' && url.indexOf('detail') > -1;
+    this.isFromDetailtoCollections =
+      template === 'detail' && url.indexOf('collections') > -1;
+
+    if (this.isFromCollectionsToDetail || this.isFromDetailtoCollections) {
+      this.transition = new Transition({
+        url,
+        gl: this.gl,
+        scene: this.scene,
+        sizes: this.sizes,
+      });
+
+      this.transition.setElement(this.collections || this.detail);
     }
   }
 
@@ -129,6 +170,14 @@ export default class Canvas {
     } else if (this.collections) {
       this.destroyCollections();
     }
+
+    if (template === 'detail') {
+      this.createDetail();
+    } else if (this.detail) {
+      this.destroyDetail();
+    }
+
+    this.template = template;
 
     this.onResize();
   }
@@ -159,6 +208,10 @@ export default class Canvas {
 
     if (this.collections && this.collections.onResize) {
       this.collections.onResize({ sizes: this.sizes });
+    }
+
+    if (this.detail && this.detail.onResize) {
+      this.detail.onResize({ sizes: this.sizes });
     }
   }
 
@@ -241,6 +294,10 @@ export default class Canvas {
 
     if (this.collections && this.collections.update) {
       this.collections.update(scroll);
+    }
+
+    if (this.detail && this.detail.update) {
+      this.detail.update(scroll);
     }
   }
 }

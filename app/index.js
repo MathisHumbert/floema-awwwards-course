@@ -79,7 +79,8 @@ class App {
   }
 
   async onChange({ url, push = true }) {
-    this.canvas.onChangeStart();
+    this.canvas.onChangeStart(this.template, url);
+
     await this.page.hide();
 
     const request = await window.fetch(url);
@@ -87,6 +88,7 @@ class App {
     if (request.status === 200) {
       const html = await request.text();
       const div = document.createElement('div');
+
       div.innerHTML = html;
 
       if (push) {
@@ -109,6 +111,7 @@ class App {
       this.onResize();
 
       this.page.show();
+
       this.addLinkListeners();
     } else {
       console.log('error');
