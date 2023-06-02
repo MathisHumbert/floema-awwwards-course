@@ -10,11 +10,6 @@ import Preloader from 'components/Preloader';
 import Navigation from 'components/Navigation';
 import Canvas from 'components/Canvas';
 
-// TODO last video to watch when webgl is done
-
-// to be used if we want to animate stuff different for mobile / tablet / desktop
-// import DetectionManager from 'classes/Detections';
-
 class App {
   constructor() {
     this.createContent();
@@ -114,7 +109,7 @@ class App {
 
       this.addLinkListeners();
     } else {
-      console.log('error');
+      // console.log('error');
     }
   }
 
