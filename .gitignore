@@ -13,3 +13,6 @@ public/
 
 # global rules
 .DS_Store
+
+# build
+dist
