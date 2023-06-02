@@ -8,9 +8,9 @@
   ],
   "routes": [{ "src": "/(.*)", "dest": "app.js" }],
   "env": {
-    "PRISMIC_ENDPOINT": "@prismic-endpoint",
-    "PRISMIC_ACCESS_TOKEN": "@prismic-access-token",
-    "PRISMIC_CLIENT_ID": "@prismic-client-id",
-    "PRISMIC_CLIENT_SECRET": "@prismic-client-secret"
+    "PRISMIC_ENDPOINT": "@prismic_endpoint",
+    "PRISMIC_ACCESS_TOKEN": "@prismic_access_token",
+    "PRISMIC_CLIENT_ID": "@prismic_client_id",
+    "PRISMIC_CLIENT_SECRET": "@prismic_client_secret"
   }
 }
